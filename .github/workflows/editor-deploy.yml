@@ -1,0 +1,26 @@
+name: Editor Deploy
+
+on:
+  push:
+    branches: [ editor ]
+
+jobs:
+  blog-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm install -g @serverless-devs/s
+      - run: npm install -g yarn
+      # 默认密钥配置指令是阿里云密钥配置指令，更多可以参考：
+      # 如何通过Github Action使用Serverless Devs做CI/CD：https://github.com/Serverless-Devs/website/blob/master/blog/zh-cn/serverless-devs-ci-cd-github-action-usage.md
+      - run: s config add --AccessKeyID ${{secrets.ACCESSKEYID}} --AccessKeySecret ${{secrets.ACCESSKEYSECRET}} -a default
+      # - run: s editor-oss deploy
+      - run: node -v
+      - run: npm -v
+      - run: yarn -v
+      - run: git --version

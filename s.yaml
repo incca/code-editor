@@ -32,7 +32,17 @@ services:
           path: ./vscode
         - run: yarn gulp vscode-web-min
           path: ./vscode
+
+        # VSCode 外部依赖
         - run: mv ./vscode-web/node_modules ./vscode-web/packages
+
+        # 自定义 webviewContentExternalBaseUrlTemplate，避免使用 vscode-cdn.net 作为 Extension Webview 的入口，
+        # 优点：彻底私有化，不依赖 MS 的 CDN 服务器，加快 Webview 加载速度
+        # 缺点：存在安全风险，因为绕过了 uuid 的校验逻辑
+        - run: mkdir ./vscode-web/external-template/
+        - run: cp ./vscode-web/out/vs/workbench/contrib/webview/browser/pre/* ./vscode-web/external-template/
+        - run: sed -i 's/const parentOrigin = searchParams\.get('\''parentOrigin'\'');/const parentOrigin = searchParams.get('\''parentOrigin'\'');return start(parentOrigin);/g' ./vscode-web/external-template/index-no-csp.html
+        - run: cat ./vscode-web/external-template/index-no-csp.html > ./vscode-web/external-template/index.html
     props:
       region: ${vars.region}
       bucket: auto

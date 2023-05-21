@@ -43,6 +43,8 @@ services:
         - run: cp ./vscode-web/out/vs/workbench/contrib/webview/browser/pre/* ./vscode-web/external-template/
         - run: sed -i 's/const parentOrigin = searchParams\.get('\''parentOrigin'\'');/const parentOrigin = searchParams.get('\''parentOrigin'\'');return start(parentOrigin);/g' ./vscode-web/external-template/index-no-csp.html
         - run: cat ./vscode-web/external-template/index-no-csp.html > ./vscode-web/external-template/index.html
+        - run: zip -rq vscode-web.zip ./vscode-web
+        - run: mv ./vscode-web.zip ./vscode-web/
     props:
       region: ${vars.region}
       bucket: auto

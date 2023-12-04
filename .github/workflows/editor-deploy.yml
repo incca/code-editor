@@ -16,6 +16,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm install -g @serverless-devs/s
       - run: npm install -g yarn
+      - run: yarn global add node-gyp
       # 默认密钥配置指令是阿里云密钥配置指令，更多可以参考：
       # 如何通过Github Action使用Serverless Devs做CI/CD：https://github.com/Serverless-Devs/website/blob/master/blog/zh-cn/serverless-devs-ci-cd-github-action-usage.md
       - run: s config add --AccessKeyID ${{secrets.ACCESSKEYID}} --AccessKeySecret ${{secrets.ACCESSKEYSECRET}} -a default
